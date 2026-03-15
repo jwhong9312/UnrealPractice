@@ -34,10 +34,7 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) 
 	{
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMouseLookAction);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerInputComponent is not a UEnhancedInputComponent!"));
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMoveAction);
 	}
 }
 
@@ -55,5 +52,30 @@ void ATDCharacter::Look(float Yaw, float Pitch)
 		AddControllerYawInput(Yaw);
 		AddControllerPitchInput(Pitch);
 	}
-	
+}
+
+void ATDCharacter::HandleMoveAction(const FInputActionValue& Value)
+{
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	Move(MovementVector.X, MovementVector.Y);
+}
+
+void ATDCharacter::Move(float Right, float Forward)
+{
+	// find out which way is forward
+	const FRotator Rotation = GetController()->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get forward vector
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// get right vector 
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	// add movement 
+	AddMovementInput(ForwardDirection, Forward);
+	AddMovementInput(RightDirection, Right);
+
+	UE_LOG(LogTemp, Log, TEXT("Move: %f, %f"), Right, Forward);
 }

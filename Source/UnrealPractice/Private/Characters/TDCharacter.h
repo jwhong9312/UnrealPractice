@@ -23,9 +23,15 @@ private:
 	void HandleMouseLookAction(const FInputActionValue& Value);
 	void Look(float Yaw, float Pitch);
 
+	void HandleMoveAction(const FInputActionValue& Value);
+	void Move(float Right, float Forward);
+
 private:
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere)
 	UInputAction* MouseLookAction;
+
+	UPROPERTY(EditAnywhere)
+	UInputAction* MoveAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
