@@ -13,6 +13,21 @@ void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	APawn* OwnerPawn = TryGetPawnOwner();
 	SetSpeed(OwnerPawn);
 	SetIsAccelerating(OwnerPawn);
+	SetIsInAir(OwnerPawn);
+	SetVerticalVelocity(OwnerPawn);
+}
+
+UCharacterMovementComponent* UTDCharacterAnimInstance::GetCharacterMovementComponent(APawn* OwnerPawn) const
+{
+	UCharacterMovementComponent* CharacterMovementComponent = nullptr;
+
+	ACharacter* OwnerCharacter = Cast<ACharacter>(OwnerPawn);
+	if (OwnerCharacter)
+	{
+		CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
+	}
+
+	return CharacterMovementComponent;
 }
 
 void UTDCharacterAnimInstance::SetSpeed(APawn* OwnerPawn)
@@ -25,13 +40,30 @@ void UTDCharacterAnimInstance::SetSpeed(APawn* OwnerPawn)
 
 void UTDCharacterAnimInstance::SetIsAccelerating(APawn* OwnerPawn)
 {
-	ACharacter* OwnerCharacter = Cast<ACharacter>(OwnerPawn);
-	if (OwnerCharacter)
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
+
+	if (CharacterMovementComponent)
 	{
-		UCharacterMovementComponent* CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
-		if (CharacterMovementComponent)
-		{
-			bIsAccelerating = CharacterMovementComponent->GetCurrentAcceleration().Size() > 0.f;
-		}
+		bIsAccelerating = CharacterMovementComponent->GetCurrentAcceleration().Size() > 0.f;
+	}
+}
+
+void UTDCharacterAnimInstance::SetIsInAir(APawn* OwnerPawn)
+{
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
+
+	if (CharacterMovementComponent)
+	{
+		bIsInAir = CharacterMovementComponent->IsFalling();
+	}
+}
+
+void UTDCharacterAnimInstance::SetVerticalVelocity(APawn* OwnerPawn)
+{
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
+
+	if (CharacterMovementComponent)
+	{
+		VerticalVelocity = CharacterMovementComponent->Velocity.Z;
 	}
 }

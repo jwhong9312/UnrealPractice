@@ -26,17 +26,22 @@ private:
 	void HandleMoveAction(const FInputActionValue& Value);
 	void Move(float Right, float Forward);
 
+	void HandleJumpAction(const FInputActionValue& Value);
+
 private:
 	UPROPERTY(EditAnywhere)
-	UInputAction* MouseLookAction;
+	TObjectPtr<UInputAction> MouseLookAction;
 
 	UPROPERTY(EditAnywhere)
-	UInputAction* MoveAction;
+	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> JumpAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
+	TObjectPtr<USpringArmComponent> CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
+	TObjectPtr<UCameraComponent> FollowCamera;
 
 };

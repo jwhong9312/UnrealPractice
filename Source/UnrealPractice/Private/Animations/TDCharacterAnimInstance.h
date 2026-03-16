@@ -6,6 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "TDCharacterAnimInstance.generated.h"
 
+class UCharacterMovementComponent;
+
 UCLASS()
 class UTDCharacterAnimInstance : public UAnimInstance
 {
@@ -14,8 +16,12 @@ class UTDCharacterAnimInstance : public UAnimInstance
 private:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	UCharacterMovementComponent* GetCharacterMovementComponent(APawn* OwnerPawn) const;
+
 	void SetSpeed(APawn* OwnerPawn);
 	void SetIsAccelerating(APawn* OwnerPawn);
+	void SetIsInAir(APawn* OwnerPawn);
+	void SetVerticalVelocity(APawn* OwnerPawn);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
@@ -23,4 +29,10 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool bIsAccelerating;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	bool bIsInAir;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	float VerticalVelocity;
 };

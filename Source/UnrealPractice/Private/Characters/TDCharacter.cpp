@@ -35,8 +35,20 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) 
 	{
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMouseLookAction);
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMoveAction);
+		if (MouseLookAction)
+		{
+			EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMouseLookAction);
+		}
+
+		if (MoveAction)
+		{
+			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleMoveAction);
+		}
+
+		if (JumpAction)
+		{
+			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATDCharacter::HandleJumpAction);
+		}
 	}
 }
 
@@ -81,5 +93,15 @@ void ATDCharacter::Move(float Right, float Forward)
 		// add movement 
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
+	}
+}
+
+void ATDCharacter::HandleJumpAction(const FInputActionValue& Value)
+{
+	bool bNeedToJump = Value.Get<bool>();
+
+	if (bNeedToJump)
+	{
+		Jump();
 	}
 }
