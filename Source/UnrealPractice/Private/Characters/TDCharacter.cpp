@@ -54,7 +54,7 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		if (AttackAction)
 		{
-			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleAttackAction);
+			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ATDCharacter::HandleAttackAction);
 		}
 	}
 }

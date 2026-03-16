@@ -8,10 +8,16 @@
 
 void UTDCharacterAnimInstance::PlayBasicAttackMontage()
 {
-	if (BasicAttack1Montage)
-	{
-		Montage_Play(BasicAttack1Montage);
-	}
+	UE_LOG(LogTemp, Warning, TEXT("PlayBasicAttackMontage called. Current index: %d"), CurrentBasicAttackMontageIndex);
+	Montage_Play(BasicAttackMontages[CurrentBasicAttackMontageIndex]);
+	IncreaseBasicAttackMontageIndex(true);
+}
+
+void UTDCharacterAnimInstance::IncreaseBasicAttackMontageIndex(bool bIsComboAttack)
+{
+	int32 NextIndex = (CurrentBasicAttackMontageIndex + 1) % BasicAttackMontages.Num();
+
+	SetCurrentBasicAttackMontageIndex(bIsComboAttack ? NextIndex : 0);
 }
 
 void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -19,10 +25,17 @@ void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	APawn* OwnerPawn = TryGetPawnOwner();
-	SetSpeed(OwnerPawn);
-	SetIsAccelerating(OwnerPawn);
-	SetIsInAir(OwnerPawn);
-	SetVerticalVelocity(OwnerPawn);
+	if (OwnerPawn)
+	{
+		UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
+		if (CharacterMovementComponent)
+		{
+			SetSpeed(CharacterMovementComponent->Velocity.Size());
+			SetIsAccelerating(CharacterMovementComponent->GetCurrentAcceleration().Size());
+			SetIsInAir(CharacterMovementComponent->IsFalling());
+			SetVerticalVelocity(CharacterMovementComponent->Velocity.Z);
+		}
+	}
 }
 
 UCharacterMovementComponent* UTDCharacterAnimInstance::GetCharacterMovementComponent(APawn* OwnerPawn) const
@@ -38,40 +51,27 @@ UCharacterMovementComponent* UTDCharacterAnimInstance::GetCharacterMovementCompo
 	return CharacterMovementComponent;
 }
 
-void UTDCharacterAnimInstance::SetSpeed(APawn* OwnerPawn)
+void UTDCharacterAnimInstance::SetSpeed(float VelocitySize)
 {
-	if (OwnerPawn)
-	{
-		Speed = OwnerPawn->GetVelocity().Size();
-	}
+	Speed = VelocitySize;
 }
 
-void UTDCharacterAnimInstance::SetIsAccelerating(APawn* OwnerPawn)
+void UTDCharacterAnimInstance::SetIsAccelerating(float AccelerationSize)
 {
-	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
-
-	if (CharacterMovementComponent)
-	{
-		bIsAccelerating = CharacterMovementComponent->GetCurrentAcceleration().Size() > 0.f;
-	}
+	bIsAccelerating = AccelerationSize > 0.f;
 }
 
-void UTDCharacterAnimInstance::SetIsInAir(APawn* OwnerPawn)
+void UTDCharacterAnimInstance::SetIsInAir(bool bInIsInAir)
 {
-	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
-
-	if (CharacterMovementComponent)
-	{
-		bIsInAir = CharacterMovementComponent->IsFalling();
-	}
+	bIsInAir = bInIsInAir;
 }
 
-void UTDCharacterAnimInstance::SetVerticalVelocity(APawn* OwnerPawn)
+void UTDCharacterAnimInstance::SetVerticalVelocity(float InVerticalVelocity)
 {
-	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovementComponent(OwnerPawn);
+	VerticalVelocity = InVerticalVelocity;
+}
 
-	if (CharacterMovementComponent)
-	{
-		VerticalVelocity = CharacterMovementComponent->Velocity.Z;
-	}
+void UTDCharacterAnimInstance::SetCurrentBasicAttackMontageIndex(int32 NextIndex)
+{
+	CurrentBasicAttackMontageIndex = NextIndex;
 }

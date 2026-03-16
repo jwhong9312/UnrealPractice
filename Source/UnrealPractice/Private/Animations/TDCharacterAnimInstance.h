@@ -9,6 +9,8 @@
 class UCharacterMovementComponent;
 class UAnimMontage;
 
+struct FAnimNotifyEvent;
+
 UCLASS()
 class UTDCharacterAnimInstance : public UAnimInstance
 {
@@ -16,16 +18,18 @@ class UTDCharacterAnimInstance : public UAnimInstance
 
 public:
 	void PlayBasicAttackMontage();
+	void IncreaseBasicAttackMontageIndex(bool bIsComboAttack);
 
 private:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UCharacterMovementComponent* GetCharacterMovementComponent(APawn* OwnerPawn) const;
 
-	void SetSpeed(APawn* OwnerPawn);
-	void SetIsAccelerating(APawn* OwnerPawn);
-	void SetIsInAir(APawn* OwnerPawn);
-	void SetVerticalVelocity(APawn* OwnerPawn);
+	void SetSpeed(float VelocitySize);
+	void SetIsAccelerating(float AccelerationSize);
+	void SetIsInAir(bool bInIsInAir);
+	void SetVerticalVelocity(float InVerticalVelocity);
+	void SetCurrentBasicAttackMontageIndex(int32 NextIndex);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
@@ -41,11 +45,7 @@ private:
 	float VerticalVelocity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<UAnimMontage> BasicAttack1Montage;
+	TArray<TObjectPtr<UAnimMontage>> BasicAttackMontages;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<UAnimMontage> BasicAttack2Montage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<UAnimMontage> BasicAttack3Montage;
+	int CurrentBasicAttackMontageIndex = 0;
 };
