@@ -76,6 +76,4 @@ void ATDCharacter::Move(float Right, float Forward)
 	// add movement 
 	AddMovementInput(ForwardDirection, Forward);
 	AddMovementInput(RightDirection, Right);
-
-	UE_LOG(LogTemp, Log, TEXT("Move: %f, %f"), Right, Forward);
 }
