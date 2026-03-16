@@ -3,6 +3,8 @@
 
 #include "Characters/TDCharacter.h"
 
+#include "Animations/TDCharacterAnimInstance.h"
+
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -49,6 +51,11 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		{
 			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATDCharacter::HandleJumpAction);
 		}
+
+		if (AttackAction)
+		{
+			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ATDCharacter::HandleAttackAction);
+		}
 	}
 }
 
@@ -61,11 +68,8 @@ void ATDCharacter::HandleMouseLookAction(const FInputActionValue& Value)
 
 void ATDCharacter::Look(float Yaw, float Pitch)
 {
-	if (GetController())
-	{
-		AddControllerYawInput(Yaw);
-		AddControllerPitchInput(Pitch);
-	}
+	AddControllerYawInput(Yaw);
+	AddControllerPitchInput(Pitch);
 }
 
 void ATDCharacter::HandleMoveAction(const FInputActionValue& Value)
@@ -103,5 +107,23 @@ void ATDCharacter::HandleJumpAction(const FInputActionValue& Value)
 	if (bNeedToJump)
 	{
 		Jump();
+	}
+}
+
+void ATDCharacter::HandleAttackAction(const FInputActionValue& Value)
+{
+	bool bNeedToAttack = Value.Get<bool>();
+	
+	if (bNeedToAttack)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance)
+		{
+			UTDCharacterAnimInstance* TDAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
+			if (TDAnimInstance)
+			{
+				TDAnimInstance->PlayBasicAttackMontage();
+			}
+		}
 	}
 }

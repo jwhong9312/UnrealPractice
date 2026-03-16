@@ -28,6 +28,8 @@ private:
 
 	void HandleJumpAction(const FInputActionValue& Value);
 
+	void HandleAttackAction(const FInputActionValue& Value);
+
 private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> MouseLookAction;
@@ -37,6 +39,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> JumpAction;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> AttackAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;

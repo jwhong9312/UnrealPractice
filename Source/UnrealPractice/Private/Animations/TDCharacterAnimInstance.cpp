@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+void UTDCharacterAnimInstance::PlayBasicAttackMontage()
+{
+	if (BasicAttack1Montage)
+	{
+		Montage_Play(BasicAttack1Montage);
+	}
+}
+
 void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);

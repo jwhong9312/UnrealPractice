@@ -7,12 +7,16 @@
 #include "TDCharacterAnimInstance.generated.h"
 
 class UCharacterMovementComponent;
+class UAnimMontage;
 
 UCLASS()
 class UTDCharacterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	void PlayBasicAttackMontage();
+
 private:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
@@ -35,4 +39,13 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float VerticalVelocity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> BasicAttack1Montage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> BasicAttack2Montage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> BasicAttack3Montage;
 };
