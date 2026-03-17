@@ -6,10 +6,28 @@
 #include "Animations/TDCharacterAnimInstance.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+void ATDCharacter::CheckHitsByAttack()
+{
+	if (SwordCollision)
+	{
+		TArray<AActor*> OverlappingActors;
+		SwordCollision->GetOverlappingActors(OverlappingActors);
+		
+		for (AActor* OverlappingActor : OverlappingActors)
+		{
+			if (OverlappingActor && OverlappingActor != this)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *OverlappingActor->GetActorLabel());
+			}
+		}
+	}
+}
 
 ATDCharacter::ATDCharacter()
 {
@@ -29,6 +47,17 @@ ATDCharacter::ATDCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	USkeletalMeshComponent* SkeletalMesh = GetMesh();
+	if (SkeletalMesh)
+	{
+		SwordCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SwordCollision"));
+		SwordCollision->SetupAttachment(SkeletalMesh, TEXT("hand_rSocket"));
+		SwordCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SwordCollision->SetCapsuleHalfHeight(65.f);
+		SwordCollision->SetCapsuleRadius(6.f);
+		SwordCollision->SetRelativeLocation(FVector(0.f, 0.f, SwordCollision->GetUnscaledCapsuleHalfHeight() * 0.5f));
+	}
 }
 
 void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

@@ -18,22 +18,16 @@ void UTDCharacterAnimInstance::PlayBasicAttackMontage()
 	Montage_Play(CurrentBasicAttackMontage);
 	bIsNextAttackAllowed = false;
 	bIsComboAttacking = true;
-
-	UE_LOG(LogTemp, Warning, TEXT("Is Combo Attack: %s, Current Basic Attack Montage Index: %d"), bIsComboAttacking ? TEXT("True") : TEXT("False"), CurrentBasicAttackMontageIndex);
 }
 
 void UTDCharacterAnimInstance::SetNextAttackAllowed()
 {
 	bIsNextAttackAllowed = true;
-
-	UE_LOG(LogTemp, Warning, TEXT("Next Attack Allowed"));
 }
 
 void UTDCharacterAnimInstance::SetComboTimeOver()
 {
 	bIsComboAttacking = false;
-
-	UE_LOG(LogTemp, Warning, TEXT("Combo Time Over")); 
 }
 
 void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

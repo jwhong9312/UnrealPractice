@@ -8,13 +8,18 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UCapsuleComponent;
 class UInputAction;
+
 struct FInputActionValue;
 
 UCLASS()
 class ATDCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+public:
+	void CheckHitsByAttack();
 
 private:
 	ATDCharacter();
@@ -49,4 +54,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCapsuleComponent> SwordCollision;
 };
