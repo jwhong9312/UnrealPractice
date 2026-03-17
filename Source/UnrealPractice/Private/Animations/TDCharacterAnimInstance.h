@@ -18,7 +18,8 @@ class UTDCharacterAnimInstance : public UAnimInstance
 
 public:
 	void PlayBasicAttackMontage();
-	void IncreaseBasicAttackMontageIndex(bool bIsComboAttack);
+	void SetNextAttackAllowed();
+	void SetComboTimeOver();
 
 private:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
@@ -29,6 +30,7 @@ private:
 	void SetIsAccelerating(float AccelerationSize);
 	void SetIsInAir(bool bInIsInAir);
 	void SetVerticalVelocity(float InVerticalVelocity);
+	void ChooseNextBasicAttackMontageIndex(bool bIsComboAttack);
 	void SetCurrentBasicAttackMontageIndex(int32 NextIndex);
 
 private:
@@ -47,5 +49,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TArray<TObjectPtr<UAnimMontage>> BasicAttackMontages;
 
-	int CurrentBasicAttackMontageIndex = 0;
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> CurrentBasicAttackMontage;
+
+	int32 CurrentBasicAttackMontageIndex = -1;
+	bool bIsNextAttackAllowed = true;
+	bool bIsComboAttacking = false;
 };

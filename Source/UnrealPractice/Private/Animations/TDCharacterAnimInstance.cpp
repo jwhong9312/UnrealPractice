@@ -8,16 +8,32 @@
 
 void UTDCharacterAnimInstance::PlayBasicAttackMontage()
 {
-	UE_LOG(LogTemp, Warning, TEXT("PlayBasicAttackMontage called. Current index: %d"), CurrentBasicAttackMontageIndex);
-	Montage_Play(BasicAttackMontages[CurrentBasicAttackMontageIndex]);
-	IncreaseBasicAttackMontageIndex(true);
+	if (!bIsNextAttackAllowed)
+	{
+		return;
+	}
+
+	ChooseNextBasicAttackMontageIndex(bIsComboAttacking);
+	CurrentBasicAttackMontage = BasicAttackMontages.IsValidIndex(CurrentBasicAttackMontageIndex) ? BasicAttackMontages[CurrentBasicAttackMontageIndex] : nullptr;
+	Montage_Play(CurrentBasicAttackMontage);
+	bIsNextAttackAllowed = false;
+	bIsComboAttacking = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("Is Combo Attack: %s, Current Basic Attack Montage Index: %d"), bIsComboAttacking ? TEXT("True") : TEXT("False"), CurrentBasicAttackMontageIndex);
 }
 
-void UTDCharacterAnimInstance::IncreaseBasicAttackMontageIndex(bool bIsComboAttack)
+void UTDCharacterAnimInstance::SetNextAttackAllowed()
 {
-	int32 NextIndex = (CurrentBasicAttackMontageIndex + 1) % BasicAttackMontages.Num();
+	bIsNextAttackAllowed = true;
 
-	SetCurrentBasicAttackMontageIndex(bIsComboAttack ? NextIndex : 0);
+	UE_LOG(LogTemp, Warning, TEXT("Next Attack Allowed"));
+}
+
+void UTDCharacterAnimInstance::SetComboTimeOver()
+{
+	bIsComboAttacking = false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Combo Time Over")); 
 }
 
 void UTDCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -69,6 +85,13 @@ void UTDCharacterAnimInstance::SetIsInAir(bool bInIsInAir)
 void UTDCharacterAnimInstance::SetVerticalVelocity(float InVerticalVelocity)
 {
 	VerticalVelocity = InVerticalVelocity;
+}
+
+void UTDCharacterAnimInstance::ChooseNextBasicAttackMontageIndex(bool bIsComboAttack)
+{
+	int32 NextIndex = (CurrentBasicAttackMontageIndex + 1) % BasicAttackMontages.Num();
+
+	SetCurrentBasicAttackMontageIndex(bIsComboAttack ? NextIndex : 0);
 }
 
 void UTDCharacterAnimInstance::SetCurrentBasicAttackMontageIndex(int32 NextIndex)
