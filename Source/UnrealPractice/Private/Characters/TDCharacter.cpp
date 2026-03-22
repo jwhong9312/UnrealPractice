@@ -64,6 +64,8 @@ ATDCharacter::ATDCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 800.0f;
 	CameraBoom->bUsePawnControlRotation = true;
+	// 보스 캐릭터에서 카메라와 충돌 option 꺼야 함
+	CameraBoom->ProbeChannel = ECC_Camera;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
