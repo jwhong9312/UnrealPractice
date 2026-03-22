@@ -19,7 +19,9 @@ class ATDCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	void CheckHitsByAttack();
+	void BeginAttackHitDetection();
+	void UpdateAttackHitDetection();
+	void EndAttackHitDetection();
 
 private:
 	ATDCharacter();
@@ -56,4 +58,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCapsuleComponent> SwordCollision;
+
+	UPROPERTY()
+	TSet<TObjectPtr<AActor>> DamagedActors;
 };

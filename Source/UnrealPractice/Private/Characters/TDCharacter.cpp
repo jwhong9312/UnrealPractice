@@ -12,20 +12,41 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-void ATDCharacter::CheckHitsByAttack()
+void ATDCharacter::BeginAttackHitDetection()
+{
+	DamagedActors.Empty();
+
+	if (SwordCollision)
+	{
+		SwordCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+}
+
+void ATDCharacter::UpdateAttackHitDetection()
+{
+	TArray<AActor*> CollidingActors;
+	if (SwordCollision)
+	{
+		SwordCollision->GetOverlappingActors(CollidingActors);
+
+		for (AActor* Actor : CollidingActors)
+		{
+			if (!Actor) continue;
+
+			if (Actor != this && !DamagedActors.Contains(Actor))
+			{
+				UE_LOG(LogTemp, Log, TEXT("%s Actor was hit"), *Actor->GetActorLabel());
+				DamagedActors.Add(Actor);
+			}
+		}
+	}
+}
+
+void ATDCharacter::EndAttackHitDetection()
 {
 	if (SwordCollision)
 	{
-		TArray<AActor*> OverlappingActors;
-		SwordCollision->GetOverlappingActors(OverlappingActors);
-		
-		for (AActor* OverlappingActor : OverlappingActors)
-		{
-			if (OverlappingActor && OverlappingActor != this)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *OverlappingActor->GetActorLabel());
-			}
-		}
+		SwordCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 

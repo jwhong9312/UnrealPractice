@@ -6,46 +6,79 @@
 #include "Animations/TDCharacterAnimInstance.h"
 #include "Characters/TDCharacter.h"
 
-void UTDAttackSaveNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
+UTDCharacterAnimInstance* GetCharacterAnimInstance(USkeletalMeshComponent* MeshComp)
 {
+	UTDCharacterAnimInstance* CharacterAnimInstance = nullptr;
+
 	if (MeshComp)
 	{
 		UAnimInstance* AnimInstance = MeshComp->GetAnimInstance();
 		if (AnimInstance)
 		{
-			UTDCharacterAnimInstance* TDAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
-			if (TDAnimInstance)
-			{
-				TDAnimInstance->SetNextAttackAllowed();
-			}
+			CharacterAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
 		}
+	}
+
+	return CharacterAnimInstance;
+}
+
+ATDCharacter* GetCharacter(USkeletalMeshComponent* MeshComp)
+{
+	ATDCharacter* Character = nullptr;
+
+	if (MeshComp)
+	{
+		APawn* Pawn = MeshComp->GetOwner<APawn>();
+		if (Pawn)
+		{
+			Character = Cast<ATDCharacter>(Pawn);
+		}
+	}
+
+	return Character;
+}
+
+void UTDAttackSaveNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
+{
+	UTDCharacterAnimInstance* TDAnimInstance = GetCharacterAnimInstance(MeshComp);
+	if (TDAnimInstance)
+	{
+		TDAnimInstance->SetNextAttackAllowed();
 	}
 }
 
 void UTDComboOverNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
-	if (MeshComp)
+	UTDCharacterAnimInstance* TDAnimInstance = GetCharacterAnimInstance(MeshComp);
+	if (TDAnimInstance)
 	{
-		UAnimInstance* AnimInstance = MeshComp->GetAnimInstance();
-		if (AnimInstance)
-		{
-			UTDCharacterAnimInstance* TDAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
-			if (TDAnimInstance)
-			{
-				TDAnimInstance->SetComboTimeOver();
-			}
-		}
+		TDAnimInstance->SetComboTimeOver();
 	}
 }
 
-void UTDCollisionBeginNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
+void UTDCollisionState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-	if (MeshComp)
+	ATDCharacter* OwningCharacter = GetCharacter(MeshComp);
+	if (OwningCharacter)
 	{
-		ATDCharacter* Character = Cast<ATDCharacter>(MeshComp->GetOwner());
-		if (Character)
-		{
-			Character->SetWeaponCollisionEnabled(true);
-		}
+		OwningCharacter->BeginAttackHitDetection();
+	}
+}
+
+void UTDCollisionState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
+{
+	ATDCharacter* OwningCharacter = GetCharacter(MeshComp);
+	if (OwningCharacter)
+	{
+		OwningCharacter->UpdateAttackHitDetection();
+	}
+}
+
+void UTDCollisionState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
+{
+	ATDCharacter* OwningCharacter = GetCharacter(MeshComp);
+	if (OwningCharacter)
+	{
+		OwningCharacter->EndAttackHitDetection();
 	}
 }
