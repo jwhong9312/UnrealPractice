@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "TDSaveBasicAttackAnimNotify.generated.h"
+#include "TDAttackSaveNotify.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UTDSaveBasicAttackAnimNotify : public UAnimNotify
+class UTDAttackSaveNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 
@@ -21,7 +21,7 @@ private:
 };
 
 UCLASS()
-class UTDBasicAttackComboTimeOverAnimNotify : public UAnimNotify
+class UTDComboOverNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 
@@ -43,7 +43,7 @@ private:
 // };
 
 UCLASS()
-class UTDBasicAttackCollisionDetectionAnimNotify : public UAnimNotify
+class UTDCollisionBeginNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 
