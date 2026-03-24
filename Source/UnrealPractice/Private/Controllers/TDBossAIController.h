@@ -25,6 +25,7 @@ private:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
 
+	void FindTarget();
 	void InitializePerceptionComponent();
 
 	void HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);

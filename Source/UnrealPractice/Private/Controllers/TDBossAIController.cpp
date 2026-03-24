@@ -45,7 +45,21 @@ void ATDBossAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FindTarget();
 	InitializePerceptionComponent();
+}
+
+void ATDBossAIController::FindTarget()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		ATDCharacter* PlayerCharacter = Cast<ATDCharacter>(UGameplayStatics::GetActorOfClass(World, ATDCharacter::StaticClass()));
+		if (PlayerCharacter && BlackBoardComponent)
+		{
+			BlackBoardComponent->SetValueAsObject(TargetKeyName, PlayerCharacter);
+		}
+	}
 }
 
 void ATDBossAIController::InitializePerceptionComponent()
