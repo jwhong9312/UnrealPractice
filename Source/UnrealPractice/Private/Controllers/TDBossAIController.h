@@ -26,9 +26,6 @@ private:
 	virtual void BeginPlay() override;
 
 	void FindTarget();
-	void InitializePerceptionComponent();
-
-	void HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 private:
     // 에디터에서 할당할 비헤이비어 트리 애셋
@@ -43,11 +40,5 @@ private:
     TObjectPtr<UBlackboardComponent> BlackBoardComponent;
 
 	UPROPERTY(Config)
-	FName TargetKeyName;
-
-	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess=true))
-	TObjectPtr<UAISenseConfig_Sight> SightConfig;
-
-	UPROPERTY(Config)
-	FName LineOfSightKeyName;
+	FName TargetActorKeyName;
 };

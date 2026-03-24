@@ -15,7 +15,6 @@
 ATDBossAIController::ATDBossAIController()
 {
 	BlackBoardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoardComponent"));
-	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 }
 
@@ -46,7 +45,6 @@ void ATDBossAIController::BeginPlay()
 	Super::BeginPlay();
 
 	FindTarget();
-	InitializePerceptionComponent();
 }
 
 void ATDBossAIController::FindTarget()
@@ -57,34 +55,7 @@ void ATDBossAIController::FindTarget()
 		ATDCharacter* PlayerCharacter = Cast<ATDCharacter>(UGameplayStatics::GetActorOfClass(World, ATDCharacter::StaticClass()));
 		if (PlayerCharacter && BlackBoardComponent)
 		{
-			BlackBoardComponent->SetValueAsObject(TargetKeyName, PlayerCharacter);
+			BlackBoardComponent->SetValueAsObject(TargetActorKeyName, PlayerCharacter);
 		}
-	}
-}
-
-void ATDBossAIController::InitializePerceptionComponent()
-{
-	if (!PerceptionComponent || !SightConfig)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PerceptionComponent is not valid"));
-		return;
-	}
-
-	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-
-	PerceptionComponent->ConfigureSense(*SightConfig);
-	PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
-	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ATDBossAIController::HandleTargetPerceptionUpdated);
-}
-
-void ATDBossAIController::HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
-{
-	if (Actor && BlackBoardComponent)
-	{
-		UE_LOG(LogTemp, Log, TEXT("Target detected: %s"), *Actor->GetActorLabel());
-		bool bIsSensed = Stimulus.WasSuccessfullySensed();
-		UE_LOG(LogTemp, Log, TEXT("Target %s"), bIsSensed ? TEXT("sensed") : TEXT("lost"));
-		BlackBoardComponent->SetValueAsBool(LineOfSightKeyName, bIsSensed);
-		BlackBoardComponent->SetValueAsObject(TargetKeyName, Actor);
 	}
 }
