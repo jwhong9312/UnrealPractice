@@ -33,18 +33,13 @@ void ATDBossAIController::OnPossess(APawn* InPawn)
 		{
 			UseBlackboard(BlackboardData, BlackboardComp);
 
-			if (RunBehaviorTree(BehaviorTree))
-			{
-				UE_LOG(LogTemp, Log, TEXT("Run Behavior Tree Succeed"));
-			}
+			RunBehaviorTree(BehaviorTree);
 		}
 	}
 }
 
 void ATDBossAIController::BeginPlay()
 {
-	Super::BeginPlay();
-
 	InitializePerceptionComponent();
 }
 

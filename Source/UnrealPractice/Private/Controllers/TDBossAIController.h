@@ -8,8 +8,12 @@
 
 class UBehaviorTree;
 class UBlackboardComponent;
+class UAIPerceptionComponent;
+class UAISenseConfig_Sight;
 
-UCLASS()
+struct FAIStimulus;
+
+UCLASS(config=Game)
 class ATDBossAIController : public AAIController
 {
 	GENERATED_BODY()
@@ -19,13 +23,30 @@ public:
 
 private:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void BeginPlay() override;
+
+	void InitializePerceptionComponent();
+
+	void HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 private:
     // 에디터에서 할당할 비헤이비어 트리 애셋
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UBehaviorTree> BehaviourTreeAsset;
+	UPROPERTY(Config)
+	TSoftObjectPtr<UBehaviorTree> BossBehaviorTreeAsset;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBehaviorTree> BossBehaviorTree;
 
     // 데이터 저장소인 블랙보드 컴포넌트
-    UPROPERTY(VisibleAnywhere)
+    UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess=true))
     TObjectPtr<UBlackboardComponent> BlackBoardComponent;
+
+	UPROPERTY(Config)
+	FName TargetKeyName;
+
+	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess=true))
+	TObjectPtr<UAISenseConfig_Sight> SightConfig;
+
+	UPROPERTY(Config)
+	FName LineOfSightKeyName;
 };
