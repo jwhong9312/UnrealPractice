@@ -8,8 +8,15 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
+UTDPatrolTask::UTDPatrolTask()
+{
+	bNotifyTick = true;
+}
+
 EBTNodeResult::Type UTDPatrolTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	Super::ExecuteTask(OwnerComp, NodeMemory);
+
 	FTDPatrolTaskMemory* Memory = (FTDPatrolTaskMemory*)NodeMemory;
 	Memory->bRequestedMove = false;
 
@@ -65,4 +72,62 @@ EBTNodeResult::Type UTDPatrolTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	Memory->TargetLocation = RandomNavLocation.Location;
 
 	return EBTNodeResult::InProgress;
+}
+
+void UTDPatrolTask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	FTDPatrolTaskMemory* Memory = (FTDPatrolTaskMemory*)NodeMemory;
+	if (!Memory->bRequestedMove)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	if (!AIController)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
+	APawn* Pawn = AIController->GetPawn();
+	if (!Pawn)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
+	FVector CurrentLocation = Pawn->GetActorLocation();
+	float DistSquared2D = FVector::DistSquared2D(CurrentLocation, Memory->TargetLocation);
+	float AcceptSquared = FMath::Square(Memory->AcceptanceRadius);
+
+	// Arrived
+	if (DistSquared2D <= AcceptSquared)
+	{
+		// Stop movement and finish node
+		AIController->StopMovement();
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		return;
+	}
+	else if(AIController->GetMoveStatus() == EPathFollowingStatus::Idle)
+	{
+		// If we are not moving and haven't arrived, something went wrong
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+}
+
+EBTNodeResult::Type UTDPatrolTask::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	Super::AbortTask(OwnerComp, NodeMemory);
+
+	// Ensure any ongoing movement is stopped
+	if (AAIController* AIController = OwnerComp.GetAIOwner())
+	{
+		AIController->StopMovement();
+	}
+
+	return EBTNodeResult::Aborted;
 }
