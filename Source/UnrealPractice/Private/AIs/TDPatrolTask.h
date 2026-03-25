@@ -34,5 +34,8 @@ private:
 	float AcceptanceRadius = 50.f;
 
 	UPROPERTY(EditAnywhere)
+	float PatrolSpeed = 170.f;
+
+	UPROPERTY(EditAnywhere)
 	FBlackboardKeySelector PatrolLocationKey;
 };

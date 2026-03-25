@@ -9,8 +9,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "Perception/AISenseConfig_Sight.h"
-#include "Perception/AIPerceptionTypes.h"
 
 ATDBossAIController::ATDBossAIController()
 {
@@ -32,10 +30,7 @@ void ATDBossAIController::OnPossess(APawn* InPawn)
 		{
 			UseBlackboard(BlackboardData, BlackboardComp);
 
-			if (RunBehaviorTree(BehaviorTree))
-			{
-				UE_LOG(LogTemp, Log, TEXT("Run Behavior Tree Succeed"));
-			}
+			RunBehaviorTree(BehaviorTree);
 		}
 	}
 }

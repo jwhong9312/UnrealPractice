@@ -7,6 +7,7 @@
 #include "NavigationSystem.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UTDPatrolTask::UTDPatrolTask()
 {
@@ -70,6 +71,12 @@ EBTNodeResult::Type UTDPatrolTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	Memory->bRequestedMove = true;
 	Memory->AcceptanceRadius = AcceptanceRadius;
 	Memory->TargetLocation = RandomNavLocation.Location;
+
+	UCharacterMovementComponent* MoveComp = Pawn->FindComponentByClass<UCharacterMovementComponent>();
+	if (MoveComp)
+	{
+		MoveComp->MaxWalkSpeed = PatrolSpeed;
+	}
 
 	return EBTNodeResult::InProgress;
 }

@@ -8,10 +8,6 @@
 
 class UBehaviorTree;
 class UBlackboardComponent;
-class UAIPerceptionComponent;
-class UAISenseConfig_Sight;
-
-struct FAIStimulus;
 
 UCLASS(config=Game)
 class ATDBossAIController : public AAIController
