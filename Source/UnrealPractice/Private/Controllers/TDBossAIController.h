@@ -32,7 +32,7 @@ private:
 	TObjectPtr<UBehaviorTree> BossBehaviorTree;
 
     // 데이터 저장소인 블랙보드 컴포넌트
-    UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess=true))
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess=true))
     TObjectPtr<UBlackboardComponent> BlackBoardComponent;
 
 	UPROPERTY(Config)
