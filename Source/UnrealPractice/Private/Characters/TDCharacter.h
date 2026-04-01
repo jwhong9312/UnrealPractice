@@ -9,11 +9,12 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UCapsuleComponent;
+class UTDCombatStatsComponent;
 class UInputAction;
 
 struct FInputActionValue;
 
-UCLASS()
+UCLASS(config=Game)
 class ATDCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -26,6 +27,7 @@ public:
 private:
 	ATDCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void BeginPlay() override;
 
 	void HandleMouseLookAction(const FInputActionValue& Value);
 	void Look(float Yaw, float Pitch);
@@ -61,4 +63,10 @@ private:
 
 	UPROPERTY()
 	TSet<TObjectPtr<AActor>> DamagedActors;
+
+	UPROPERTY()
+	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
+
+	UPROPERTY(config)
+	FName CharacterDataID;
 };

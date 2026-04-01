@@ -4,6 +4,7 @@
 #include "Characters/TDCharacter.h"
 
 #include "Animations/TDCharacterAnimInstance.h"
+#include "Components/Character/TDCombatStatsComponent.h"
 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -108,6 +109,17 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		{
 			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ATDCharacter::HandleAttackAction);
 		}
+	}
+}
+
+void ATDCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CombatStatsComponent = GetComponentByClass<UTDCombatStatsComponent>();
+	if (CombatStatsComponent)
+	{
+		CombatStatsComponent->InitializeCombatStats(CharacterDataID);
 	}
 }
 
