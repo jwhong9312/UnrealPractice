@@ -5,9 +5,17 @@
 
 #include "Components/Character/TDCombatStatsComponent.h"
 
-void ATDBossCharacter::BeginPlay()
+void ATDBossCharacter::TakeAttackDamage(float AttackDamage)
 {
-	Super::BeginPlay();
+	if (CombatStatsComponent)
+	{
+		CombatStatsComponent->CalculateLeftHPBy(AttackDamage);
+	}
+}
+
+void ATDBossCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 
 	CombatStatsComponent = GetComponentByClass<UTDCombatStatsComponent>();
 	if (CombatStatsComponent)

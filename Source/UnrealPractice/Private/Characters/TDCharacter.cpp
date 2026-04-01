@@ -5,6 +5,7 @@
 
 #include "Animations/TDCharacterAnimInstance.h"
 #include "Components/Character/TDCombatStatsComponent.h"
+#include "Characters/TDBossCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -38,6 +39,12 @@ void ATDCharacter::UpdateAttackHitDetection()
 			{
 				UE_LOG(LogTemp, Log, TEXT("%s Actor was hit"), *Actor->GetActorLabel());
 				DamagedActors.Add(Actor);
+
+				ATDBossCharacter* BossCharacter = Cast<ATDBossCharacter>(Actor);
+				if (BossCharacter && CombatStatsComponent)
+				{
+					BossCharacter->TakeAttackDamage(CombatStatsComponent->GetAttackDamage());
+				}
 			}
 		}
 	}
@@ -63,7 +70,7 @@ ATDCharacter::ATDCharacter()
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 800.0f;
+	CameraBoom->TargetArmLength = 1200.0f;
 	CameraBoom->bUsePawnControlRotation = true;
 	// 보스 캐릭터에서 카메라와 충돌 option 꺼야 함
 	CameraBoom->ProbeChannel = ECC_Camera;
@@ -112,9 +119,9 @@ void ATDCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
-void ATDCharacter::BeginPlay()
+void ATDCharacter::PostInitializeComponents()
 {
-	Super::BeginPlay();
+	Super::PostInitializeComponents();
 
 	CombatStatsComponent = GetComponentByClass<UTDCombatStatsComponent>();
 	if (CombatStatsComponent)

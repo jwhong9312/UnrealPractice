@@ -8,18 +8,21 @@
 
 class UTDCombatStatsComponent;
 
-UCLASS(config=Game)
+UCLASS()
 class ATDBossCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void BeginPlay() override;
+public:
+	void TakeAttackDamage(float AttackDamage);
 
 private:
-	UPROPERTY()
-	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
+	virtual void PostInitializeComponents() override;
 
+private:
 	UPROPERTY(config)
 	FName CharacterDataID;
+
+	UPROPERTY()
+	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
 };

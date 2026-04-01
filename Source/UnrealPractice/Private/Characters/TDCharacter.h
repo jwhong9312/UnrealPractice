@@ -27,7 +27,7 @@ public:
 private:
 	ATDCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 	void HandleMouseLookAction(const FInputActionValue& Value);
 	void Look(float Yaw, float Pitch);
@@ -64,9 +64,9 @@ private:
 	UPROPERTY()
 	TSet<TObjectPtr<AActor>> DamagedActors;
 
-	UPROPERTY()
-	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
-
 	UPROPERTY(config)
 	FName CharacterDataID;
+
+	UPROPERTY()
+	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
 };
