@@ -10,4 +10,18 @@ UCLASS()
 class UTDBossCharacterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void PlayIdleAnim();
+
+	UFUNCTION(BlueprintCallable)
+	void PlayWalkAnim();
+
+private:
+	void SetIsWalking(bool bNewIsWalking);
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	bool bIsWalking;
 };
