@@ -6,8 +6,20 @@
 #include "GameFramework/Character.h"
 #include "TDBossCharacter.generated.h"
 
-UCLASS()
+class UTDCombatStatsComponent;
+
+UCLASS(config=Game)
 class ATDBossCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
+
+	UPROPERTY(config)
+	FName CharacterDataID;
 };

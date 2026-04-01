@@ -30,8 +30,3 @@ void UTDCombatStatsComponent::InitializeCombatStats(FName CharacterDataID)
 		}
 	}
 }
-
-void UTDCombatStatsComponent::BeginPlay()
-{
-}
-

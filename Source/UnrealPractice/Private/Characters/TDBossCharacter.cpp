@@ -2,3 +2,16 @@
 
 
 #include "Characters/TDBossCharacter.h"
+
+#include "Components/Character/TDCombatStatsComponent.h"
+
+void ATDBossCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CombatStatsComponent = GetComponentByClass<UTDCombatStatsComponent>();
+	if (CombatStatsComponent)
+	{
+		CombatStatsComponent->InitializeCombatStats(CharacterDataID);
+	}
+}

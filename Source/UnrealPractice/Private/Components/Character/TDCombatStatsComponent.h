@@ -15,12 +15,6 @@ class UTDCombatStatsComponent : public UActorComponent
 public:
 	void InitializeCombatStats(FName CharacterDataID);
 
-protected:
-	virtual void BeginPlay() override;
-
-private:
-
-
 private:
 	float DefaultHealthPoint;
 	float DefaultMovementSpeed;
