@@ -20,11 +20,10 @@ void UTDCombatStatsComponent::InitializeCombatStats(FName CharacterDataID)
 				const FTDCharacterData* CharacterData = GameInstanceSubsystem->GetCharacterData(CharacterDataID);
 				if (CharacterData)
 				{
-					DefaultHealthPoint = CharacterData->HealthPoint;
+					DefaultMaxHealthPoint = CharacterData->MaxHealthPoint;
+					CurrentHealthPoint = DefaultMaxHealthPoint;
 					DefaultMovementSpeed = CharacterData->MovementSpeed;
 					AttackDamage = CharacterData->AttackDamage;
-
-					UE_LOG(LogTemp, Log, TEXT("Combat stats initialized for %s: HP=%f, Speed=%f, AttackDamage=%f"), *CharacterDataID.ToString(), DefaultHealthPoint, DefaultMovementSpeed, AttackDamage);
 				}
 			}
 		}

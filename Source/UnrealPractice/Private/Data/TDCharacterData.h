@@ -20,7 +20,7 @@ struct FTDCharacterData : public FTableRowBase
 	ETDCharacterRole CharacterRole;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float HealthPoint;
+	float MaxHealthPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float MovementSpeed;

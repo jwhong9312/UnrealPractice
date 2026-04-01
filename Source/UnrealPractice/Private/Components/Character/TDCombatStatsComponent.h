@@ -16,7 +16,8 @@ public:
 	void InitializeCombatStats(FName CharacterDataID);
 
 private:
-	float DefaultHealthPoint;
+	float DefaultMaxHealthPoint;
+	float CurrentHealthPoint;
 	float DefaultMovementSpeed;
 	float AttackDamage;
 };
