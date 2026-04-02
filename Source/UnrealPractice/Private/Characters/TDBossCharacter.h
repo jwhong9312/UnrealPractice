@@ -14,6 +14,9 @@ class ATDBossCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	void BeginAttackHitDetection();
+	void UpdateAttackHitDetection();
+	void EndAttackHitDetection();
 	void TakeAttackDamage(float AttackDamage);
 
 private:
@@ -29,4 +32,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCapsuleComponent> FistCollision;
+
+	UPROPERTY()
+	TSet<TObjectPtr<AActor>> DamagedActors;
 };

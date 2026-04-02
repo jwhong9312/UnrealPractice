@@ -4,8 +4,53 @@
 #include "Characters/TDBossCharacter.h"
 
 #include "Components/Character/TDCombatStatsComponent.h"
+#include "Characters/TDCharacter.h"
 
 #include "Components/CapsuleComponent.h"
+
+void ATDBossCharacter::BeginAttackHitDetection()
+{
+	DamagedActors.Empty();
+
+	if (FistCollision)
+	{
+		FistCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+}
+
+void ATDBossCharacter::UpdateAttackHitDetection()
+{
+	TArray<AActor*> CollidingActors;
+	if (FistCollision)
+	{
+		FistCollision->GetOverlappingActors(CollidingActors);
+
+		for (AActor* Actor : CollidingActors)
+		{
+			if (!Actor) continue;
+
+			if (Actor != this && !DamagedActors.Contains(Actor))
+			{
+				UE_LOG(LogTemp, Log, TEXT("%s Actor was hit"), *Actor->GetActorLabel());
+				DamagedActors.Add(Actor);
+
+				ATDCharacter* PlayerCharacter = Cast<ATDCharacter>(Actor);
+				if (PlayerCharacter && CombatStatsComponent)
+				{
+					PlayerCharacter->TakeAttackDamage(CombatStatsComponent->GetAttackDamage());
+				}
+			}
+		}
+	}
+}
+
+void ATDBossCharacter::EndAttackHitDetection()
+{
+	if (FistCollision)
+	{
+		FistCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
 
 void ATDBossCharacter::TakeAttackDamage(float AttackDamage)
 {
@@ -21,10 +66,10 @@ ATDBossCharacter::ATDBossCharacter()
 	if (SkeletalMesh)
 	{
 		FistCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("FistCollision"));
-		FistCollision->SetupAttachment(SkeletalMesh, TEXT("FistCollisionCenter"));
+		FistCollision->SetupAttachment(SkeletalMesh, TEXT("Muzzle_01"));
 		FistCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		FistCollision->SetCapsuleHalfHeight(30.f);
-		FistCollision->SetCapsuleRadius(35.f);
+		FistCollision->SetCapsuleHalfHeight(100.f);
+		FistCollision->SetCapsuleRadius(100.f);
 	}
 }
 

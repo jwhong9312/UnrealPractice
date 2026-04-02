@@ -23,6 +23,7 @@ public:
 	void BeginAttackHitDetection();
 	void UpdateAttackHitDetection();
 	void EndAttackHitDetection();
+	void TakeAttackDamage(float AttackDamage);
 
 private:
 	ATDCharacter();

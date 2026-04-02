@@ -58,6 +58,14 @@ void ATDCharacter::EndAttackHitDetection()
 	}
 }
 
+void ATDCharacter::TakeAttackDamage(float AttackDamage)
+{
+	if (CombatStatsComponent)
+	{
+		CombatStatsComponent->CalculateLeftHPBy(AttackDamage);
+	}
+}
+
 ATDCharacter::ATDCharacter()
 {
 	bUseControllerRotationPitch = false;

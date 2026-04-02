@@ -5,6 +5,7 @@
 
 #include "Animations/TDCharacterAnimInstance.h"
 #include "Characters/TDCharacter.h"
+#include "Characters/TDBossCharacter.h"
 
 UTDCharacterAnimInstance* GetCharacterAnimInstance(USkeletalMeshComponent* MeshComp)
 {
@@ -38,6 +39,22 @@ ATDCharacter* GetCharacter(USkeletalMeshComponent* MeshComp)
 	return Character;
 }
 
+ATDBossCharacter* GetBossCharacter(USkeletalMeshComponent* MeshComp)
+{
+	ATDBossCharacter* BossCharacter = nullptr;
+
+	if (MeshComp)
+	{
+		APawn* Pawn = MeshComp->GetOwner<APawn>();
+		if (Pawn)
+		{
+			BossCharacter = Cast<ATDBossCharacter>(Pawn);
+		}
+	}
+
+	return BossCharacter;
+}
+
 void UTDAttackSaveNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	UTDCharacterAnimInstance* TDAnimInstance = GetCharacterAnimInstance(MeshComp);
@@ -63,6 +80,12 @@ void UTDCollisionState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeque
 	{
 		OwningCharacter->BeginAttackHitDetection();
 	}
+
+	ATDBossCharacter* BossCharacter = GetBossCharacter(MeshComp);
+	if (BossCharacter)
+	{
+		BossCharacter->BeginAttackHitDetection();
+	}
 }
 
 void UTDCollisionState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
@@ -72,6 +95,12 @@ void UTDCollisionState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 	{
 		OwningCharacter->UpdateAttackHitDetection();
 	}
+
+	ATDBossCharacter* BossCharacter = GetBossCharacter(MeshComp);
+	if (BossCharacter)
+	{
+		BossCharacter->UpdateAttackHitDetection();
+	}
 }
 
 void UTDCollisionState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
@@ -80,5 +109,11 @@ void UTDCollisionState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	if (OwningCharacter)
 	{
 		OwningCharacter->EndAttackHitDetection();
+	}
+
+	ATDBossCharacter* BossCharacter = GetBossCharacter(MeshComp);
+	if (BossCharacter)
+	{
+		BossCharacter->EndAttackHitDetection();
 	}
 }
