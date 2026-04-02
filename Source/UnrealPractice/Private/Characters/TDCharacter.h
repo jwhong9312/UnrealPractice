@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UCapsuleComponent;
+class UTDCharacterAnimInstance;
 class UTDCombatStatsComponent;
 class UInputAction;
 
@@ -39,6 +40,10 @@ private:
 	void HandleJumpAction(const FInputActionValue& Value);
 
 	void HandleAttackAction(const FInputActionValue& Value);
+
+	void HandleCharacterDeath();
+
+	UTDCharacterAnimInstance* GetTDAnimInstance() const;
 
 private:
 	UPROPERTY(EditAnywhere)

@@ -7,6 +7,7 @@
 #include "Characters/TDCharacter.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATDBossCharacter::BeginAttackHitDetection()
 {
@@ -81,5 +82,19 @@ void ATDBossCharacter::PostInitializeComponents()
 	if (CombatStatsComponent)
 	{
 		CombatStatsComponent->InitializeCombatStats(CharacterDataID);
+
+		CombatStatsComponent->GetOnCharacterDeath().AddUObject(this, &ATDBossCharacter::HandleBossCharacterDeath);
 	}
+}
+
+void ATDBossCharacter::HandleBossCharacterDeath()
+{
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("World is null in HandleBossCharacterDeath"));
+		return;
+	}
+
+	UGameplayStatics::OpenLevel(this, FName(*World->GetName()));
 }

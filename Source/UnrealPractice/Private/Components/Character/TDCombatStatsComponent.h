@@ -15,11 +15,15 @@ class UTDCombatStatsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	DECLARE_MULTICAST_DELEGATE(FOnCharacterDeath);
+
 public:
 	void InitializeCombatStats(FName CharacterDataID);
 	void SetViewModel(UTDPlayerWidgetViewModel* InViewModel);
 	float GetAttackDamage() const { return AttackDamage; }
 	void CalculateLeftHPBy(float EnemyAttackDamage);
+
+	FOnCharacterDeath& GetOnCharacterDeath() { return OnCharacterDeath; }
 
 private:
 	void SetHealthPoint(float CurrentHP, float MaxHp);
@@ -34,4 +38,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UTDPlayerWidgetViewModel> PlayerWidgetViewModel;
+
+	FOnCharacterDeath OnCharacterDeath;
 };

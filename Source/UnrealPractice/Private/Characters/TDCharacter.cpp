@@ -13,6 +13,7 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATDCharacter::BeginAttackHitDetection()
 {
@@ -135,6 +136,8 @@ void ATDCharacter::PostInitializeComponents()
 	if (CombatStatsComponent)
 	{
 		CombatStatsComponent->InitializeCombatStats(CharacterDataID);
+
+		CombatStatsComponent->GetOnCharacterDeath().AddUObject(this, &ATDCharacter::HandleCharacterDeath);
 	}
 }
 
@@ -195,14 +198,39 @@ void ATDCharacter::HandleAttackAction(const FInputActionValue& Value)
 	
 	if (bNeedToAttack)
 	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-		if (AnimInstance)
+		UTDCharacterAnimInstance* TDAnimInstance = GetTDAnimInstance();
+		if (TDAnimInstance)
 		{
-			UTDCharacterAnimInstance* TDAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
-			if (TDAnimInstance)
-			{
-				TDAnimInstance->PlayBasicAttackMontage();
-			}
+			TDAnimInstance->PlayBasicAttackMontage();
 		}
 	}
+}
+
+void ATDCharacter::HandleCharacterDeath()
+{
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("World is null in HandleCharacterDeath"));
+		return;
+	}
+
+	UGameplayStatics::OpenLevel(this, FName(*World->GetName()));
+}
+
+UTDCharacterAnimInstance* ATDCharacter::GetTDAnimInstance() const
+{
+	UTDCharacterAnimInstance* TDAnimInstance = nullptr;
+
+	USkeletalMeshComponent* CharacterSkeletalMesh = GetMesh();
+	if (CharacterSkeletalMesh)
+	{
+		UAnimInstance* AnimInstance = CharacterSkeletalMesh->GetAnimInstance();
+		if (AnimInstance)
+		{
+			TDAnimInstance = Cast<UTDCharacterAnimInstance>(AnimInstance);
+		}
+	}
+
+	return TDAnimInstance;
 }

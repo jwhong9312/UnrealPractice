@@ -23,6 +23,8 @@ private:
 	ATDBossCharacter();
 	virtual void PostInitializeComponents() override;
 
+	void HandleBossCharacterDeath();
+
 private:
 	UPROPERTY(config)
 	FName CharacterDataID;

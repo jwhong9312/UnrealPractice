@@ -48,6 +48,11 @@ void UTDCombatStatsComponent::CalculateLeftHPBy(float EnemyAttackDamage)
 	CurrentHealthPoint = FMath::Clamp(CurrentHealthPoint, 0.0f, DefaultMaxHealthPoint);
 
 	SetHealthPoint(CurrentHealthPoint, DefaultMaxHealthPoint);
+
+	if (CurrentHealthPoint <= 0.0f)
+	{
+		OnCharacterDeath.Broadcast();
+	}
 }
 
 void UTDCombatStatsComponent::SetHealthPoint(float CurrentHP, float MaxHp)
@@ -56,11 +61,11 @@ void UTDCombatStatsComponent::SetHealthPoint(float CurrentHP, float MaxHp)
 	{
 		if (CharacterRole == ETDCharacterRole::Warrior)
 		{
-			PlayerWidgetViewModel->UpdatePlayerHealthPercent(CurrentHealthPoint, DefaultMaxHealthPoint);
+			PlayerWidgetViewModel->UpdatePlayerHealthPercent(CurrentHP, MaxHp);
 		}
 		else if (CharacterRole == ETDCharacterRole::Boss)
 		{
-			PlayerWidgetViewModel->UpdateBossHealthPercent(CurrentHealthPoint, DefaultMaxHealthPoint);
+			PlayerWidgetViewModel->UpdateBossHealthPercent(CurrentHP, MaxHp);
 		}
 	}
 }
