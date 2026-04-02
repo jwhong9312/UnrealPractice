@@ -30,7 +30,7 @@ private:
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(config)
-	TSubclassOf<UTDPlayerWidget> PlayerWidgetClass;
+	TSoftClassPtr<UTDPlayerWidget> PlayerWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<UTDPlayerWidget> PlayerWidget;

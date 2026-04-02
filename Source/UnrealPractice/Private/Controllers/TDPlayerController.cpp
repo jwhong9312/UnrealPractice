@@ -36,12 +36,13 @@ void ATDPlayerController::BeginPlay()
 
 void ATDPlayerController::CreatePlayerWidget()
 {
-	if (PlayerWidgetClass)
+	TSubclassOf<UTDPlayerWidget> LoadedPlayerWidgetClass = PlayerWidgetClass.LoadSynchronous();
+	if (LoadedPlayerWidgetClass)
 	{
 		PlayerWidgetViewModel = NewObject<UTDPlayerWidgetViewModel>(this);
 
-		PlayerWidget = CreateWidget<UTDPlayerWidget>(this, PlayerWidgetClass);
-		
+		PlayerWidget = CreateWidget<UTDPlayerWidget>(this, LoadedPlayerWidgetClass);
+
 		PlayerWidget->SetViewModel(PlayerWidgetViewModel);
 		PlayerWidget->AddToViewport();
 	}
