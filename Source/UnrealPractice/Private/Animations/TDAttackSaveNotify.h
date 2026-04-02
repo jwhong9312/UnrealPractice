@@ -27,18 +27,6 @@ private:
 	
 };
 
-// UCLASS()
-// class UTDBasicAttackCollisionDetectionAnimNotify : public UAnimNotifyState
-// {
-// 	GENERATED_BODY()
-// 
-// private:
-// 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
-// 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference, float FrameDeltaTime) override;
-// 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
-// 
-// };
-
 UCLASS()
 class UTDCollisionState : public UAnimNotifyState
 {
