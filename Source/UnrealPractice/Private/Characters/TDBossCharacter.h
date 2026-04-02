@@ -17,6 +17,7 @@ public:
 	void TakeAttackDamage(float AttackDamage);
 
 private:
+	ATDBossCharacter();
 	virtual void PostInitializeComponents() override;
 
 private:
@@ -25,4 +26,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UTDCombatStatsComponent> CombatStatsComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCapsuleComponent> FistCollision;
 };
